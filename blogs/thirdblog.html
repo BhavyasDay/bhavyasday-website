@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works. A daily note from Bhavya's Day.">
+<title>Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works · Bhavya's Day</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+:root{--cream:#fffaf5;--paper:#fffdf9;--blush:#f8dcd2;--peach:#f6cfc0;--butter:#f7e9b7;--sage:#dce8d6;--lav:#ebe3ef;--sky:#e2eef2;--pink:#edaaa0;--ink:#625953;--muted:#8d8179;--line:rgba(98,89,83,.14);--radius:30px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif}a{text-decoration:none;color:inherit}.wrap{width:min(920px,calc(100% - 44px));margin:auto}.top{padding:26px 0;display:flex;justify-content:space-between;align-items:center}.logo{font-family:'Playfair Display';font-size:1.35rem;font-weight:600}.logo em{color:var(--pink);font-style:italic}.back{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--ink);padding:11px 16px;border-radius:999px}.article-head{padding:82px 0 48px;text-align:center}.kicker{text-transform:uppercase;letter-spacing:.13em;font-size:.68rem;font-weight:700;color:#b67d73}.article-head h1{font-family:'Playfair Display';font-size:clamp(3rem,7vw,6.5rem);font-weight:500;line-height:.94;letter-spacing:-.055em;margin:20px auto;max-width:880px}.article-head h1 em{color:#c58d83;font-style:italic}.date{font-size:.78rem;color:var(--muted);margin-top:22px}.hero-card{height:300px;border-radius:var(--radius);background:linear-gradient(135deg,var(--blush),var(--butter) 48%,var(--sky));position:relative;overflow:hidden;margin-bottom:68px}.hero-card:before{content:"";position:absolute;width:300px;height:170px;border-radius:50%;background:rgba(255,253,249,.7);left:8%;top:45px;box-shadow:180px 35px 0 rgba(255,253,249,.58),390px -15px 0 rgba(255,253,249,.48)}.hero-card:after{content:"numbers · noise · room to breathe";position:absolute;right:7%;bottom:12%;font-family:'Playfair Display';font-style:italic;font-size:clamp(1.5rem,4vw,3.2rem);color:rgba(98,89,83,.23);transform:rotate(-4deg)}article{font-size:1.08rem;line-height:1.9;max-width:780px;margin:auto}article p{margin:0 0 28px}article h2{font-family:'Playfair Display';font-size:clamp(2.25rem,4.5vw,3.8rem);font-weight:500;line-height:1;margin:62px 0 20px;letter-spacing:-.035em}article h2 em{color:#c58d83;font-style:italic}article ul{margin:-8px 0 30px;padding-left:1.25rem}article li{padding-left:.35rem;margin:12px 0}article li::marker{color:#c58d83}.pull{background:var(--butter);border-radius:24px;padding:30px 34px;font-family:'Playfair Display';font-size:1.65rem;line-height:1.28;margin:45px 0}.end{padding:70px 0 110px;text-align:center}.end p{color:var(--muted)}.end a{display:inline-flex;margin-top:15px;padding:14px 20px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:.78rem;font-weight:700}@media(max-width:560px){.top{gap:15px}.back{font-size:.68rem}.article-head{padding-top:60px}.hero-card{height:240px}article{font-size:1rem}.pull{padding:25px;font-size:1.4rem}}
+
+.stack-table{width:100%;border-collapse:collapse;margin:28px 0 45px;font-size:.9rem;line-height:1.55}.stack-table th,.stack-table td{text-align:left;vertical-align:top;padding:15px 12px;border-bottom:1px solid var(--line)}.stack-table th{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#8b756e}.stack-table tr:first-child th{border-top:1px solid var(--line)}.golden-rules{padding-left:1.35rem;margin:0 0 30px}.golden-rules li{padding-left:.35rem;margin:18px 0}.golden-rules li::marker{color:#c58d83;font-family:'Playfair Display'}
+@media(max-width:700px){.stack-table{display:block;overflow-x:auto;white-space:normal}.stack-table th,.stack-table td{min-width:150px}.stack-table td:last-child{min-width:240px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><a class="logo" href="../index.html">Bhavya<span>'s Day</span><em>.</em></a><a class="back" href="../index.html#letters">← back to blogs</a></header>
+<main>
+<div class="article-head"><div class="kicker">daily note · 03</div><h1>Beyond the Prompt Box: <em>How to Build an AI Productivity Stack That Actually Works</em></h1><div class="date">3 October 2026 · Bhavya's Day</div></div>
+<div class="hero-card"></div>
+<article>
+<p>When generative AI first became part of everyday work, the habit was fairly simple. Open a chat window, paste something in, ask for a summary, a draft, or a few ideas, and move on.</p>
+<p>That is useful, but I think we are starting to see a much more interesting way of working with AI. The real value is not in having another window open on your laptop. It is in connecting the right tools to the parts of your day that tend to eat up time and attention.</p>
+<p>Research, writing, meetings, planning, design, and repetitive admin can all become a little lighter when the workflow is designed properly. The point is not to collect twenty AI tools just because they exist. It is to build a small system that quietly takes care of the friction, while you keep your attention for the decisions that actually matter.</p>
+<p>Here is how I would think about building an AI productivity stack that genuinely makes the week easier.</p>
+
+<h2>1. Grounded Research &amp; <em>Deep Synthesis</em></h2>
+<p>Search can be surprisingly time consuming when you need to understand a topic rather than simply find one fact. You can end up opening one tab after another, comparing sources, and trying to work out which information is actually useful.</p>
+<ul>
+<li><strong>Perplexity:</strong> Useful when I want to get a quick sense of an industry, check a fact, compare technical options, or understand a topic without spending the first hour opening tabs. It brings sources together and makes the first pass through a subject much faster.</li>
+<li><strong>Google NotebookLM:</strong> This is particularly useful when the information already exists in your own documents. Upload PDFs, transcripts, notes, or research material and you can ask questions against that collection. It is a practical way to find patterns and pull out the important details from documents that would otherwise take hours to go through.</li>
+</ul>
+
+<h2>2. Thinking Partners &amp; <em>Long Form Composition</em></h2>
+<p>For complicated ideas, writing, planning, and strategy, I still think general purpose AI models are where most of the thinking happens.</p>
+<ul>
+<li><strong>Claude &amp; ChatGPT:</strong> Both can help with reasoning, research, writing, and restructuring ideas. Claude can be particularly useful when I want a more natural editorial pass or need to work through a long piece of material. ChatGPT is useful when I want several capabilities in one place, including web research, deeper reasoning, image work, and data analysis.</li>
+<li><strong>The workflow rule:</strong> I would not hand over the final voice to an AI tool and call the job finished. Use it to challenge an argument, find gaps in an outline, make a messy idea clearer, critique an early draft, or turn scattered notes into something you can actually work with. The final point of view should still come from you.</li>
+</ul>
+
+<h2>3. Communication, Meetings &amp; <em>Admin</em></h2>
+<p>A surprising amount of a working day disappears into small administrative tasks. Emails, meeting notes, follow ups, scheduling changes, and all the little things that sit between the work you actually wanted to do.</p>
+<ul>
+<li><strong>Granola / Fireflies.ai:</strong> Meeting tools can be much more useful when they do more than simply produce a transcript. Tools such as Granola can combine notes with meeting audio and turn the conversation into something more structured, including decisions and next steps.</li>
+<li><strong>Superhuman AI / Shortwave:</strong> Helpful for busy inboxes. They can summarise long threads, help draft replies, and make action items easier to spot before they disappear underneath everything else.</li>
+<li><strong>Motion / Reclaim:</strong> These tools approach the calendar from a different angle. Instead of treating your schedule as something fixed, they can move tasks and focused work around as meetings and deadlines change.</li>
+</ul>
+
+<h2>4. Visuals, Decks &amp; <em>Rapid Prototyping</em></h2>
+<p>Turning an idea into something visual can be one of the slowest parts of the process, especially when you are working alone or do not have a designer sitting beside you.</p>
+<ul>
+<li><strong>Gamma:</strong> A useful starting point when you have an outline but do not want to spend hours building the first version of a presentation. You can give it the structure and let it create the initial layout, then refine what actually deserves to stay.</li>
+<li><strong>Cursor / v0:</strong> For people building digital products, these tools can shorten the distance between an idea and a working interface. Cursor works inside the codebase and can help with changes across multiple files, while v0 can turn a written description into a starting point for a web interface.</li>
+</ul>
+
+<h2>5. Workflow Automation &amp; <em>Custom Agents</em></h2>
+<p>This is where AI starts to feel less like a tool you operate and more like something running quietly in the background.</p>
+<ul>
+<li><strong>Make / Zapier:</strong> These are useful for connecting the tools you already use. A form submission can trigger an analysis, update a database, and send a notification without someone having to move the information manually from one place to another.</li>
+<li><strong>n8n / Gumloop:</strong> These are worth exploring when a workflow has several steps and you want more control over how they connect. They can be used for recurring research, data collection, report preparation, and other processes that would otherwise involve the same sequence of manual actions every time.</li>
+</ul>
+
+<h2>The AI Productivity <em>Stack Matrix</em></h2>
+<table class="stack-table">
+<thead><tr><th>Category</th><th>Primary Tools</th><th>Best Used For</th></tr></thead>
+<tbody>
+<tr><td>Research &amp; Synthesis</td><td>Perplexity, NotebookLM</td><td>Cited web search and document analysis grounded in your own sources</td></tr>
+<tr><td>Reasoning &amp; Writing</td><td>Claude, ChatGPT</td><td>Strategic thinking, outlining, editing, and problem solving</td></tr>
+<tr><td>Admin &amp; Meetings</td><td>Granola, Superhuman, Motion</td><td>Meeting notes, inbox management, and flexible calendar planning</td></tr>
+<tr><td>Visuals &amp; Decks</td><td>Gamma, v0, Canva AI</td><td>Presentation drafts, interface ideas, and visual documents</td></tr>
+<tr><td>Automation</td><td>Zapier, Make, n8n</td><td>Connecting apps and handling recurring workflows</td></tr>
+</tbody>
+</table>
+
+<h2>The 3 Golden Rules for Using AI Without <em>Wasting Time</em></h2>
+<ol class="golden-rules">
+<li><strong>Beware the "Optimization Trap":</strong> There is a strange irony to spending three hours testing productivity tools instead of doing the work. You do not need a new platform for every small problem. Learn the few tools that genuinely fit your workflow before adding more.</li>
+<li><strong>Context In, Quality Out:</strong> AI works much better when it understands what you are actually trying to do. Give it the audience, the goal, the constraints, the tone, and the things you do not want. A thoughtful brief will usually produce a much more useful result than a clever one line prompt.</li>
+<li><strong>Keep the Human Fingerprint:</strong> Let AI help with the first draft of a process, the initial research, repetitive formatting, or the parts of a task that simply take too long. But keep your taste, judgment, experience, and perspective in the room. That is the part that makes the work yours.</li>
+</ol>
+</article>
+<div class="end"><div class="kicker">until tomorrow</div><p>Thank you for being here.</p><a href="../index.html#letters">read more daily notes ↗</a></div>
+</main>
+</div>
+</body>
+</html>
