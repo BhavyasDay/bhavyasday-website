@@ -31,6 +31,7 @@ footer{padding:65px max(5vw,22px) 28px;background:#f2e9e3}.footer-top{width:min(
 @media(max-width:850px){.links{display:none}.menu{display:block}.nav-btn{display:none}.hero{padding-top:125px}.hero-top,.hero-bottom{display:block}.hero-note{margin-top:18px}.hero h1{font-size:clamp(4rem,17vw,7rem)}.hero-copy{margin-bottom:25px}.hero-art{height:145px;margin-top:40px}.chapters{grid-template-columns:1fr 1fr}.feature,.journal-feature,.first-hours-box{grid-template-columns:1fr}.interest-form{grid-template-columns:1fr}.form-field:nth-child(8),.form-note,.form-submit{grid-column:auto}.letter{grid-template-columns:90px 1fr}.letter .read{grid-column:2;justify-self:start}.contact-box{display:block}.socials{margin-top:25px}.footer-top{display:block}.footer-links{margin-top:45px}.copyright{display:block}.copyright span{display:block;margin-bottom:7px}}
 @media(max-width:560px){section{padding:75px 18px}.hero{padding-left:18px;padding-right:18px}.chapters{grid-template-columns:1fr}.letter{grid-template-columns:1fr;gap:8px}.letter .read{grid-column:auto}.feature-main{min-height:480px;padding:30px}.mini{min-height:260px}.journal-paper{width:68%;left:13%}.journal-paper h4{font-size:2.7rem}.copyright{font-size:.62rem}}
 </style>
+<link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
 <div class="progress"></div>
@@ -89,18 +90,18 @@ const observer=new IntersectionObserver(items=>items.forEach(item=>{if(item.isIn
 const menu=document.querySelector('.menu'),links=document.querySelector('.links');menu.addEventListener('click',()=>{const open=links.dataset.open==='1';links.dataset.open=open?'0':'1';links.style.display=open?'none':'flex';links.style.position='absolute';links.style.right='0';links.style.top='58px';links.style.flexDirection='column';links.style.padding='18px 22px';links.style.background='rgba(255,253,248,.98)';links.style.border='1px solid var(--line)';links.style.borderRadius='22px'});links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(innerWidth<851)links.style.display='none'}));
 const firstHoursForm=document.getElementById('first-hours-form');const firstHoursStatus=document.getElementById('first-hours-status');const firstHoursSubmit=document.getElementById('first-hours-submit');
 if(firstHoursForm){firstHoursForm.addEventListener('submit',async e=>{e.preventDefault();firstHoursSubmit.disabled=true;firstHoursSubmit.textContent='sending...';firstHoursStatus.textContent='Sending your details...';try{const response=await fetch(firstHoursForm.action,{method:'POST',body:new FormData(firstHoursForm),headers:{'Accept':'application/json'}});if(response.ok){firstHoursForm.reset();firstHoursStatus.textContent='Thank you. Your interest has been registered. I will be in touch if there is a fit.';firstHoursSubmit.textContent='registered ✓'}else{throw new Error('submit failed')}}catch(error){firstHoursStatus.textContent='Something went wrong. Please try again in a moment.';firstHoursSubmit.disabled=false;firstHoursSubmit.textContent='register my interest ↗'}})}
-<script>
+
 const LETTERS_SOURCE='https://api.github.com/repos/BhavyasDay/bhavyasday-website/contents/blogs?ref=main';
 const LETTERS_FALLBACK=[
  {file:'fifthblog.html',date:'4 October 2026',title:'I Am the Woman My Bloodline Had No Language For.',desc:'A reflection on inherited expectations, expansion, abundance, and becoming the life your roots may never have had language for.'},
  {file:'fourthblog.html',date:'3 October 2026',title:'Why Everyone Needs an Entrepreneurial Mindset.',desc:'Why entrepreneurship is less about a job title and more about agency, systems thinking, spotting friction and creating durable value.'},
  {file:'thirdblog.html',date:'2 October 2026',title:'Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works.',desc:'A practical look at turning AI from a standalone chatbot into a lean workflow for research, thinking, communication, execution and automation.'},
  {file:'secondblog.html',date:'1 October 2026',title:'Things I Am Learning Lately: On Numbers, Noise, and Room to Breathe.',desc:'Finance, routines, quiet ideas, meaningful work and the small turns that are teaching me how to make more room for the life I am building.'},
- {file:'firstblog.html',date:'30 September 2026',title:'A little corner of the internet, finally.',desc:'The first note from Bhavya\'s Day.'}
+ {file:'firstblog.html',date:'30 September 2026',title:'A little corner of the internet, finally.',desc:"The first note from Bhavya's Day."}
 ];
 function cleanTitle(doc){const h=doc.querySelector('.article-head h1');return h?h.textContent.trim():doc.title.replace(/\s*[·|].*$/,'').trim()}
 function cleanDate(doc){const d=doc.querySelector('.article-head .date');return d?d.textContent.replace(/\s*·\s*Bhavya.?s Day/i,'').trim():''}
-function cleanDesc(doc){const m=doc.querySelector('meta[name="description"]');if(!m)return '';let x=m.content||'';return x.replace(/\s*A daily note from Bhavya.?s Day\.?$/i,'').trim()}
+function cleanDesc(doc){const m=doc.querySelector('meta[name="description"]');if(!m)return '';return (m.content||'').replace(/\s*A daily note from Bhavya.?s Day.?$/i,'').trim()}
 function parseDate(x){const t=Date.parse(x);return Number.isNaN(t)?0:t}
 async function getLetters(){
  try{
@@ -109,23 +110,18 @@ async function getLetters(){
   const items=await Promise.all(files.map(async x=>{
    const html=await fetch(x.download_url).then(r=>r.text());
    const doc=new DOMParser().parseFromString(html,'text/html');
-   const known=LETTERS_FALLBACK.find(k=>k.file===x.name); return known || {file:x.name,date:cleanDate(doc),title:cleanTitle(doc),desc:cleanDesc(doc)};
+   const known=LETTERS_FALLBACK.find(k=>k.file===x.name);
+   return known || {file:x.name,date:cleanDate(doc),title:cleanTitle(doc),desc:cleanDesc(doc)};
   }));
   return items.filter(x=>x.date&&x.title).sort((a,b)=>parseDate(b.date)-parseDate(a.date));
  }catch(e){return LETTERS_FALLBACK}
 }
-function letterCard(x,archive=false){
- const href=`blogs/${x.file}`;
- if(archive)return `<article class="letter"><div class="date">${x.date}</div><div><a class="title" href="${href}">${x.title}</a><div class="desc">${x.desc||''}</div></div><a class="read" href="${href}">read ↗</a></article>`;
- return `<article class="letter reveal"><div class="letter-date">${x.date}</div><div><h3>${x.title}</h3><p>${x.desc||''}</p></div><a class="read" href="${href}">read ↗</a></article>`;
-}
+function letterCard(x){return `<article class="letter reveal"><div class="letter-date">${x.date}</div><div><h3>${x.title}</h3><p>${x.desc||''}</p></div><a class="read" href="blogs/${x.file}">read ↗</a></article>`}
 async function renderLetters(){
  const items=await getLetters();
  const home=document.getElementById('letter-list-dynamic');
- if(home)home.innerHTML=items.slice(0,3).map(x=>letterCard(x)).join('');
- const archive=document.getElementById('letters-archive-dynamic');
- if(archive)archive.innerHTML=items.map(x=>letterCard(x,true)).join('');
- if(window.IntersectionObserver){document.querySelectorAll('.reveal').forEach(x=>observer.observe(x));}
+ if(home)home.innerHTML=items.slice(0,3).map(letterCard).join('');
+ if(window.IntersectionObserver)document.querySelectorAll('.reveal').forEach(x=>observer.observe(x));
 }
 renderLetters();
 </script>
