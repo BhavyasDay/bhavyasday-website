@@ -61,11 +61,7 @@ footer{padding:65px max(5vw,22px) 28px;background:#f2e9e3}.footer-top{width:min(
 </div></div></section>
 
 <section id="letters" class="letters"><div class="wrap"><div class="section-head reveal"><div><div class="kicker">daily notes</div><h2>Letters from<br>my little corner.</h2></div><p>Thoughts that did not quite belong in a caption. Some are useful. Some are personal. Some are simply things I wanted to remember.</p></div>
-<div class="letter-list">
-<article class="letter reveal"><div class="letter-date">3 Oct 2026</div><div><h3>Why Everyone Needs an Entrepreneurial Mindset.</h3><p>Why entrepreneurship is less about a job title and more about agency, systems thinking, spotting friction and creating durable value.</p></div><a class="read" href="blogs/fourthblog.html">read ↗</a></article>
-<article class="letter reveal"><div class="letter-date">2 Oct 2026</div><div><h3>Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works.</h3><p>A practical look at turning AI from a standalone chatbot into a lean workflow for research, thinking, communication, execution and automation.</p></div><a class="read" href="blogs/thirdblog.html">read ↗</a></article>
-<article class="letter reveal"><div class="letter-date">1 Oct 2026</div><div><h3>Things I Am Learning Lately: On Numbers, Noise, and Room to Breathe.</h3><p>Finance, routines, quiet ideas, meaningful work and the small turns that are teaching me how to make more room for the life I am building.</p></div><a class="read" href="blogs/secondblog.html">read ↗</a></article>
-</div>
+<div id="letter-list-dynamic" class="letter-list"></div>
 <div class="letters-archive-link"><a href="letters.html">view all letters <span>↗</span></a></div></div></section>
 
 <section id="vlogs"><div class="wrap"><div class="section-head reveal"><div><div class="kicker">watch along</div><h2>Come spend<br>a day with me.</h2></div><p>Little pieces of real life. Slow mornings, study sessions, resets, cafés, getting ready, figuring things out and making an ordinary day feel a little more special.</p></div><div class="feature"><article class="feature-main reveal"><div class="kicker" style="color:#fff4e8">on YouTube</div><h3>First Hours,<br>slow mornings<br>& real days.</h3><p>Videos from Bhavya's Day, from the things I am learning to the routines I am trying and the little adventures in between.</p><a class="button" style="width:max-content;border-color:white;color:white" href="https://www.youtube.com/@Bhavyasday" target="_blank" rel="noreferrer">watch on YouTube ↗</a></article><div class="mini-grid"><article class="mini reveal"><div class="kicker">vlog idea</div><h3>A reset that actually feels like one.</h3><p>Room reset, workout, skincare, coffee, planning and a little time away from the noise.</p><span class="bubble"></span></article><article class="mini reveal"><div class="kicker">come along</div><h3>Study, work, wander.</h3><p>A real day in motion, with the productive bits and the completely unproductive ones too.</p><span class="bubble"></span></article></div></div></div></section>
@@ -93,6 +89,45 @@ const observer=new IntersectionObserver(items=>items.forEach(item=>{if(item.isIn
 const menu=document.querySelector('.menu'),links=document.querySelector('.links');menu.addEventListener('click',()=>{const open=links.dataset.open==='1';links.dataset.open=open?'0':'1';links.style.display=open?'none':'flex';links.style.position='absolute';links.style.right='0';links.style.top='58px';links.style.flexDirection='column';links.style.padding='18px 22px';links.style.background='rgba(255,253,248,.98)';links.style.border='1px solid var(--line)';links.style.borderRadius='22px'});links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(innerWidth<851)links.style.display='none'}));
 const firstHoursForm=document.getElementById('first-hours-form');const firstHoursStatus=document.getElementById('first-hours-status');const firstHoursSubmit=document.getElementById('first-hours-submit');
 if(firstHoursForm){firstHoursForm.addEventListener('submit',async e=>{e.preventDefault();firstHoursSubmit.disabled=true;firstHoursSubmit.textContent='sending...';firstHoursStatus.textContent='Sending your details...';try{const response=await fetch(firstHoursForm.action,{method:'POST',body:new FormData(firstHoursForm),headers:{'Accept':'application/json'}});if(response.ok){firstHoursForm.reset();firstHoursStatus.textContent='Thank you. Your interest has been registered. I will be in touch if there is a fit.';firstHoursSubmit.textContent='registered ✓'}else{throw new Error('submit failed')}}catch(error){firstHoursStatus.textContent='Something went wrong. Please try again in a moment.';firstHoursSubmit.disabled=false;firstHoursSubmit.textContent='register my interest ↗'}})}
+<script>
+const LETTERS_SOURCE='https://api.github.com/repos/BhavyasDay/bhavyasday-website/contents/blogs?ref=main';
+const LETTERS_FALLBACK=[
+ {file:'fifthblog.html',date:'4 October 2026',title:'I Am the Woman My Bloodline Had No Language For.',desc:'A reflection on inherited expectations, expansion, abundance, and becoming the life your roots may never have had language for.'},
+ {file:'fourthblog.html',date:'3 October 2026',title:'Why Everyone Needs an Entrepreneurial Mindset.',desc:'Why entrepreneurship is less about a job title and more about agency, systems thinking, spotting friction and creating durable value.'},
+ {file:'thirdblog.html',date:'2 October 2026',title:'Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works.',desc:'A practical look at turning AI from a standalone chatbot into a lean workflow for research, thinking, communication, execution and automation.'},
+ {file:'secondblog.html',date:'1 October 2026',title:'Things I Am Learning Lately: On Numbers, Noise, and Room to Breathe.',desc:'Finance, routines, quiet ideas, meaningful work and the small turns that are teaching me how to make more room for the life I am building.'},
+ {file:'firstblog.html',date:'30 September 2026',title:'A little corner of the internet, finally.',desc:'The first note from Bhavya\'s Day.'}
+];
+function cleanTitle(doc){const h=doc.querySelector('.article-head h1');return h?h.textContent.trim():doc.title.replace(/\s*[·|].*$/,'').trim()}
+function cleanDate(doc){const d=doc.querySelector('.article-head .date');return d?d.textContent.replace(/\s*·\s*Bhavya.?s Day/i,'').trim():''}
+function cleanDesc(doc){const m=doc.querySelector('meta[name="description"]');if(!m)return '';let x=m.content||'';return x.replace(/\s*A daily note from Bhavya.?s Day\.?$/i,'').trim()}
+function parseDate(x){const t=Date.parse(x);return Number.isNaN(t)?0:t}
+async function getLetters(){
+ try{
+  const listing=await fetch(LETTERS_SOURCE,{headers:{Accept:'application/vnd.github+json'}}).then(r=>{if(!r.ok)throw new Error('listing failed');return r.json()});
+  const files=listing.filter(x=>x.type==='file'&&/^\d+blog\.html$/.test(x.name));
+  const items=await Promise.all(files.map(async x=>{
+   const html=await fetch(x.download_url).then(r=>r.text());
+   const doc=new DOMParser().parseFromString(html,'text/html');
+   const known=LETTERS_FALLBACK.find(k=>k.file===x.name); return known || {file:x.name,date:cleanDate(doc),title:cleanTitle(doc),desc:cleanDesc(doc)};
+  }));
+  return items.filter(x=>x.date&&x.title).sort((a,b)=>parseDate(b.date)-parseDate(a.date));
+ }catch(e){return LETTERS_FALLBACK}
+}
+function letterCard(x,archive=false){
+ const href=`blogs/${x.file}`;
+ if(archive)return `<article class="letter"><div class="date">${x.date}</div><div><a class="title" href="${href}">${x.title}</a><div class="desc">${x.desc||''}</div></div><a class="read" href="${href}">read ↗</a></article>`;
+ return `<article class="letter reveal"><div class="letter-date">${x.date}</div><div><h3>${x.title}</h3><p>${x.desc||''}</p></div><a class="read" href="${href}">read ↗</a></article>`;
+}
+async function renderLetters(){
+ const items=await getLetters();
+ const home=document.getElementById('letter-list-dynamic');
+ if(home)home.innerHTML=items.slice(0,3).map(x=>letterCard(x)).join('');
+ const archive=document.getElementById('letters-archive-dynamic');
+ if(archive)archive.innerHTML=items.map(x=>letterCard(x,true)).join('');
+ if(window.IntersectionObserver){document.querySelectorAll('.reveal').forEach(x=>observer.observe(x));}
+}
+renderLetters();
 </script>
 </body>
 </html>
