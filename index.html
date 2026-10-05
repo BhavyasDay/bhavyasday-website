@@ -91,16 +91,70 @@ const menu=document.querySelector('.menu'),links=document.querySelector('.links'
 const firstHoursForm=document.getElementById('first-hours-form');const firstHoursStatus=document.getElementById('first-hours-status');const firstHoursSubmit=document.getElementById('first-hours-submit');
 if(firstHoursForm){firstHoursForm.addEventListener('submit',async e=>{e.preventDefault();firstHoursSubmit.disabled=true;firstHoursSubmit.textContent='sending...';firstHoursStatus.textContent='Sending your details...';try{const response=await fetch(firstHoursForm.action,{method:'POST',body:new FormData(firstHoursForm),headers:{'Accept':'application/json'}});if(response.ok){firstHoursForm.reset();firstHoursStatus.textContent='Thank you. Your interest has been registered. I will be in touch if there is a fit.';firstHoursSubmit.textContent='registered ✓'}else{throw new Error('submit failed')}}catch(error){firstHoursStatus.textContent='Something went wrong. Please try again in a moment.';firstHoursSubmit.disabled=false;firstHoursSubmit.textContent='register my interest ↗'}})}
 
-const LETTERS=[
+const LETTERS_SOURCE='https://api.github.com/repos/BhavyasDay/bhavyasday-website/contents/blogs?ref=main';
+const LETTERS_RAW='https://raw.githubusercontent.com/BhavyasDay/bhavyasday-website/main/blogs/';
+const LETTERS_FALLBACK=[
  {file:'fifthblog.html',date:'4 October 2026',title:'I Am the Woman My Bloodline Had No Language For.',desc:'A reflection on inherited expectations, expansion, abundance, and becoming the life your roots may never have had language for.'},
  {file:'fourthblog.html',date:'3 October 2026',title:'Why Everyone Needs an Entrepreneurial Mindset.',desc:'Why entrepreneurship is less about a job title and more about agency, systems thinking, spotting friction, and creating durable value.'},
  {file:'thirdblog.html',date:'2 October 2026',title:'Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works.',desc:'A practical look at turning AI from a standalone chatbot into a lean workflow for research, thinking, communication, execution, and automation.'},
  {file:'secondblog.html',date:'1 October 2026',title:'Things I Am Learning Lately: On Numbers, Noise, and Room to Breathe.',desc:'Finance, routines, quiet ideas, meaningful work, and the small turns that are teaching me how to make more room for the life I am building.'},
  {file:'firstblog.html',date:'30 September 2026',title:'A little corner of the internet, finally.',desc:"The first note from Bhavya's Day."}
 ];
-function letterCard(x){return `<article class="letter reveal"><div class="letter-date">${x.date}</div><div><h3>${x.title}</h3><p>${x.desc}</p></div><a class="read" href="blogs/${x.file}">read ↗</a></article>`}
-const home=document.getElementById('letter-list-dynamic');
-if(home){home.innerHTML=LETTERS.slice(0,3).map(letterCard).join('');if(observer)home.querySelectorAll('.reveal').forEach(x=>observer.observe(x));}
+
+function escapeHtml(value){
+ return String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+function getMeta(doc,selector,fallback=''){
+ const el=doc.querySelector(selector);
+ return el ? (el.textContent||el.getAttribute('content')||'').trim() : fallback;
+}
+function parseLetter(file,source){
+ const doc=new DOMParser().parseFromString(source,'text/html');
+ const title=getMeta(doc,'.article-head h1',doc.title.replace(/\s*·.*$/,''));
+ const date=getMeta(doc,'.article-head .date','');
+ const description=getMeta(doc,'meta[name="description"]','').replace(/\s*A daily note from Bhavya.?s Day\.?$/i,'').trim();
+ const dateMatch=date.match(/\b\d{1,2}\s+\w+\s+\d{4}\b/);
+ return {
+   file,
+   date:dateMatch?dateMatch[0]:date,
+   title:title.replace(/\s+/g,' ').trim(),
+   desc:description || 'A daily note from Bhavya\'s Day.'
+ };
+}
+function dateValue(item){
+ const t=Date.parse(item.date);
+ return Number.isNaN(t) ? 0 : t;
+}
+function letterCard(x){
+ return `<article class="letter reveal"><div class="letter-date">${escapeHtml(x.date)}</div><div><h3>${escapeHtml(x.title)}</h3><p>${escapeHtml(x.desc)}</p></div><a class="read" href="blogs/${encodeURIComponent(x.file)}">read ↗</a></article>`;
+}
+async function loadLatestLetters(){
+ const home=document.getElementById('letter-list-dynamic');
+ if(!home)return;
+ let letters=[];
+ try{
+   const response=await fetch(LETTERS_SOURCE,{cache:'no-store'});
+   if(!response.ok)throw new Error('GitHub file list unavailable');
+   const files=await response.json();
+   const blogFiles=files
+     .filter(x=>x.type==='file' && /^.*blog\.html$/i.test(x.name))
+     .map(x=>x.name);
+   const parsed=await Promise.all(blogFiles.map(async file=>{
+     try{
+       const r=await fetch(LETTERS_RAW+encodeURIComponent(file),{cache:'no-store'});
+       if(!r.ok)throw new Error('Blog unavailable');
+       return parseLetter(file,await r.text());
+     }catch(e){return null;}
+   }));
+   letters=parsed.filter(Boolean).sort((a,b)=>dateValue(b)-dateValue(a));
+ }catch(e){
+   letters=LETTERS_FALLBACK;
+ }
+ if(!letters.length)letters=LETTERS_FALLBACK;
+ home.innerHTML=letters.slice(0,3).map(letterCard).join('');
+ if(observer)home.querySelectorAll('.reveal').forEach(x=>observer.observe(x));
+}
+loadLatestLetters();
 </script>
 </body>
 </html>
