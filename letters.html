@@ -4,7 +4,8 @@
 </head><body><div class="wrap"><header class="top"><a class="logo" href="index.html">Bhavya<span>'s Day</span><em>.</em></a><a class="back" href="index.html#letters">back to home</a></header><main><section class="intro"><div class="kicker">the complete archive</div><h1>All my<br><em>letters.</em></h1><p>The full collection of notes from Bhavya's Day, kept in one place. The homepage carries the latest three. This is where you can wander through everything.</p></section><section id="letters-archive-dynamic" class="archive"></section></main><footer>© 2026 Bhavya's Day · all letters, in one little corner.</footer></div><script>
 const LETTERS_SOURCE='https://api.github.com/repos/BhavyasDay/bhavyasday-website/contents/blogs?ref=main';
 const LETTERS_FALLBACK=[
- {file:'fifthblog.html',date:'4 October 2026',title:'I Am the Woman My Bloodline Had No Language For.',desc:'A reflection on inherited expectations, expansion, abundance, and becoming the life your roots may never have had language for.'},
+ {file:'eighteenthblog.html',date:'23 October 2026',title:'When the Autopilot Fails: The Solo Builder’s Guide to Crashing, Rising, and Meeting the Unexpected',desc:'A practical reflection on what happens when a solo creator’s systems break, plans change, and the unexpected calls for a steadier way forward.'},
+  {file:'fifthblog.html',date:'4 October 2026',title:'I Am the Woman My Bloodline Had No Language For.',desc:'A reflection on inherited expectations, expansion, abundance, and becoming the life your roots may never have had language for.'},
  {file:'fourthblog.html',date:'3 October 2026',title:'Why Everyone Needs an Entrepreneurial Mindset.',desc:'Why entrepreneurship is less about a job title and more about agency, systems thinking, spotting friction and creating durable value.'},
  {file:'thirdblog.html',date:'2 October 2026',title:'Beyond the Prompt Box: How to Build an AI Productivity Stack That Actually Works.',desc:'A practical look at turning AI from a standalone chatbot into a lean workflow for research, thinking, communication, execution and automation.'},
  {file:'secondblog.html',date:'1 October 2026',title:'Things I Am Learning Lately: On Numbers, Noise, and Room to Breathe.',desc:'Finance, routines, quiet ideas, meaningful work and the small turns that are teaching me how to make more room for the life I am building.'},
@@ -19,7 +20,7 @@ async function getLetters(){
   const listing=await fetch(LETTERS_SOURCE,{headers:{Accept:'application/vnd.github+json'}}).then(r=>{if(!r.ok)throw new Error('listing failed');return r.json()});
   const files=listing.filter(x=>x.type==='file'&&/^[a-z0-9]+blog\.html$/i.test(x.name));
   const items=await Promise.all(files.map(async x=>{
-   const html=await fetch(x.download_url).then(r=>r.text());
+   const html=await fetch(x.download_url,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('file fetch failed');return r.text()});
    const doc=new DOMParser().parseFromString(html,'text/html');
    const known=LETTERS_FALLBACK.find(k=>k.file===x.name); return known || {file:x.name,date:cleanDate(doc),title:cleanTitle(doc),desc:cleanDesc(doc)};
   }));
